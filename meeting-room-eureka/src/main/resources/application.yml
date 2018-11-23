@@ -1,0 +1,12 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: meeting-room-eureka
+#Eureka Standalone Server       
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:${server.port}/eureka/

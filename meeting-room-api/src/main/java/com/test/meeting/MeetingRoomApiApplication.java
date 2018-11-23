@@ -8,7 +8,10 @@ import org.springframework.context.annotation.Bean;
 
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.repository.CalendarRepository;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
+
+@EnableEurekaClient
 @SpringBootApplication
 public class MeetingRoomApiApplication {
 	

@@ -2,6 +2,8 @@ package com.test.meeting.controller;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,43 +17,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.domain.CalendarDto;
 import com.test.meeting.repository.CalendarRepository;
+import com.test.meeting.service.ICalendarService;
 
 @Controller
 public class CalendarController {
 	@Autowired
 	CalendarRepository calendarRepository;
+	@Autowired
+	ICalendarService calendarService;
 
 	@RequestMapping(value = "/")
 	public String index(Model model) {
 		model.addAttribute(calendarRepository.findAll());
-		System.out.println("abc");
 		calendarRepository.findAll().forEach(System.out::println);
 		return "index";
 	}
 
 	@RequestMapping(value = "/calendars", method = RequestMethod.POST)
-	public @ResponseBody ResponseEntity<String> addCalendars(@RequestBody CalendarDto calendarDto) {
-		System.out.println("addCalendar");
-
-		Calendar calendar = new Calendar();
-		//calendar.setCalId(calendarDto.getCalId());
-		calendar.setMeetingRoomId(calendarDto.getMeetingRoomId());
-		calendar.setRegUser(calendarDto.getRegUser());
-		calendar.setRegYmd(calendarDto.getRegYmd());
-		calendar.setStartTime(calendarDto.getStartTime());
-		calendar.setEndTime(calendarDto.getEndTime());
-		
-		calendarRepository.save(calendar);
-
+	public @ResponseBody String addCalendars(@RequestBody CalendarDto calendarDto) {
+		calendarService.addCalendar(calendarDto);
 		calendarRepository.findAll().forEach(System.out::println);
 
-		return new ResponseEntity<String>("Good", HttpStatus.OK);
+		return "Good";
 	}
 
 	@RequestMapping(value = "/calendars", method = RequestMethod.GET)
 	public @ResponseBody List<Calendar> getCalendars() {
 		calendarRepository.findAll().forEach(System.out::println);
 
-		return calendarRepository.findAll();
+		return calendarService.getCalendars();
 	}
 }

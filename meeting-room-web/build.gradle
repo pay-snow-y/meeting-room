@@ -35,6 +35,7 @@ dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-eureka:1.4.5.RELEASE')
 	compile('org.springframework.cloud:spring-cloud-starter-feign:1.4.5.RELEASE')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.springframework.boot:spring-boot-devtools')
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 

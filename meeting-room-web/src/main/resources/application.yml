@@ -8,7 +8,10 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
-      
+  devtools:
+    livereload:
+      enabled: true
+
 #Eureka Client   
 eureka:
   client:

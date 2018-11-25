@@ -2,13 +2,31 @@ package com.test.meeting.domain;
 
 public class CalendarDto {
 	private int calId;
-	private int meetingRoomId;
+	private int roomId;
 	private String regUser;
 	private String regYmd;
 	private String startTime;
 	private String endTime;
+	private String repeatYn;
+	private int repeatCount;
 
-	CalendarDto() {
+	public CalendarDto() {
+	}
+
+	public String getRepeatYn() {
+		return repeatYn;
+	}
+
+	public void setRepeatYn(String repeatYn) {
+		this.repeatYn = repeatYn;
+	}
+
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
 	}
 
 	public int getCalId() {
@@ -19,12 +37,12 @@ public class CalendarDto {
 		this.calId = calId;
 	}
 
-	public int getMeetingRoomId() {
-		return meetingRoomId;
+	public int getRoomId() {
+		return roomId;
 	}
 
-	public void setMeetingRoomId(int meetingRoomId) {
-		this.meetingRoomId = meetingRoomId;
+	public void setRoomId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	public String getRegUser() {
@@ -61,7 +79,8 @@ public class CalendarDto {
 
 	@Override
 	public String toString() {
-		return "calendarDTO [calId=" + calId + ", meetingRoomId=" + meetingRoomId + ", regUser=" + regUser + ", regYmd="
-				+ regYmd + ", startTime=" + startTime + ", endTime=" + endTime + "]";
+		return "Calendar [calId=" + calId + ", roomId=" + roomId + ", regUser=" + regUser + ", regYmd=" + regYmd
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", repeatYn=" + repeatYn + ", repeatCount="
+				+ repeatCount + "]";
 	}
 }

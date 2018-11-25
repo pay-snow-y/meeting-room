@@ -7,6 +7,9 @@ spring:
   h2:
     console:
       enabled: true
+  devtools:
+    livereload:
+      enabled: true     
       
 #Eureka Client   
 eureka:

@@ -2,18 +2,41 @@ package com.test.meeting.domain;
 
 public class Calendar {
 	private int calId;
-	private int meetingRoomId;
+	private int roomId;
 	private String regUser;
 	private String regYmd;
 	private String startTime;
 	private String endTime;
+	private String repeatYn;
+	private int repeatCount;
 
-	public Calendar(int meetingRoomId, String regUser) {
-		this.meetingRoomId = meetingRoomId;
+	public Calendar(int roomId, String regUser, String regYmd, String startTime, String endTime, String repeatYn, int repeatCount) {
+		this.roomId = roomId;
 		this.regUser = regUser;
+		this.regYmd = regYmd;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.repeatYn = repeatYn;
+		this.repeatCount = repeatCount;
 	}
 
 	public Calendar() {
+	}
+	
+	public String getRepeatYn() {
+		return repeatYn;
+	}
+
+	public void setRepeatYn(String repeatYn) {
+		this.repeatYn = repeatYn;
+	}
+
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
 	}
 
 	public int getCalId() {
@@ -24,12 +47,12 @@ public class Calendar {
 		this.calId = calId;
 	}
 
-	public int getMeetingRoomId() {
-		return meetingRoomId;
+	public int getRoomId() {
+		return roomId;
 	}
 
-	public void setMeetingRoomId(int meetingRoomId) {
-		this.meetingRoomId = meetingRoomId;
+	public void setRoomId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	public String getRegUser() {
@@ -66,7 +89,7 @@ public class Calendar {
 
 	@Override
 	public String toString() {
-		return "calendar [calId=" + calId + ", meetingRoomId=" + meetingRoomId + ", regUser=" + regUser + ", regYmd="
-				+ regYmd + ", startTime=" + startTime + ", endTime=" + endTime + "]";
+		return "<h4>" + regUser + "</h4>"
+				+ startTime + "<br/>" + endTime;
 	}
 }

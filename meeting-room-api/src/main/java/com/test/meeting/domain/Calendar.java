@@ -1,5 +1,6 @@
 package com.test.meeting.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,20 +9,45 @@ import javax.persistence.Id;
 @Entity
 public class Calendar {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int calId;
-	private int meetingRoomId;
+	private int roomId;
 	private String regUser;
 	private String regYmd;
 	private String startTime;
 	private String endTime;
+	@Column(columnDefinition = "char default 'Y'")
+	private String repeatYn;
+	@Column(columnDefinition = "int default 0")
+	private int repeatCount;
 
-	public Calendar(int meetingRoomId, String regUser) {
-		this.meetingRoomId = meetingRoomId;
+	public Calendar(int roomId, String regUser, String regYmd, String startTime, String endTime, String repeatYn, int repeatCount) {
+		this.roomId = roomId;
 		this.regUser = regUser;
+		this.regYmd = regYmd;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.repeatYn = repeatYn;
+		this.repeatCount = repeatCount;
 	}
 
 	public Calendar() {
+	}
+	
+	public String getRepeatYn() {
+		return repeatYn;
+	}
+
+	public void setRepeatYn(String repeatYn) {
+		this.repeatYn = repeatYn;
+	}
+
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
 	}
 
 	public int getCalId() {
@@ -32,12 +58,12 @@ public class Calendar {
 		this.calId = calId;
 	}
 
-	public int getMeetingRoomId() {
-		return meetingRoomId;
+	public int getRoomId() {
+		return roomId;
 	}
 
-	public void setMeetingRoomId(int meetingRoomId) {
-		this.meetingRoomId = meetingRoomId;
+	public void setRoomId(int roomId) {
+		this.roomId = roomId;
 	}
 
 	public String getRegUser() {
@@ -74,7 +100,8 @@ public class Calendar {
 
 	@Override
 	public String toString() {
-		return "calendar [calId=" + calId + ", meetingRoomId=" + meetingRoomId + ", regUser=" + regUser + ", regYmd="
-				+ regYmd + ", startTime=" + startTime + ", endTime=" + endTime + "]";
+		return "Calendar [calId=" + calId + ", roomId=" + roomId + ", regUser=" + regUser + ", regYmd=" + regYmd
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", repeatYn=" + repeatYn + ", repeatCount="
+				+ repeatCount + "]";
 	}
 }

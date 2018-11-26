@@ -9,6 +9,15 @@ public class CalendarDto {
 	private String endTime;
 	private String repeatYn;
 	private int repeatCount;
+	
+	public CalendarDto(int calId, int roomId, String regUser, String regYmd, String startTime, String endTime) {
+		this.calId = calId;
+		this.roomId = roomId;
+		this.regUser = regUser;
+		this.regYmd = regYmd;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
 
 	public CalendarDto() {
 	}

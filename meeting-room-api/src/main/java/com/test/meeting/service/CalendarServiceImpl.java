@@ -13,13 +13,17 @@ import com.test.meeting.repository.RoomRepository;
 
 @Service
 public class CalendarServiceImpl implements ICalendarService{
-	@Autowired
 	CalendarRepository calendarRepository;
-	@Autowired
 	RoomRepository roomRepository;
 
+	@Autowired
+	public CalendarServiceImpl(CalendarRepository calendarRepository, RoomRepository roomRepository) {
+		this.calendarRepository = calendarRepository;
+		this.roomRepository = roomRepository;
+	}
+
 	@Override
-	public String addCalendar(CalendarDto calendarDto) {
+	public Calendar addCalendar(CalendarDto calendarDto) {
 		try {
 			Calendar calendar = new Calendar();
 			calendar.setRoomId(calendarDto.getRoomId());
@@ -28,11 +32,11 @@ public class CalendarServiceImpl implements ICalendarService{
 			calendar.setStartTime(calendarDto.getStartTime());
 			calendar.setEndTime(calendarDto.getEndTime());
 			
-			calendarRepository.save(calendar);
+			Calendar resultCalendar = calendarRepository.save(calendar);
 			
-			return "Success";
+			return resultCalendar;
 		} catch (Exception e) {
-			return "Fail";
+			return new Calendar();
 		}
 	}
 
@@ -47,8 +51,17 @@ public class CalendarServiceImpl implements ICalendarService{
 	}
 
 	@Override
-	public List<Calendar> getOverlappedCalendars(int roomId, String regYmd, String startTime, String endTime) {
+	public List<CalendarDto> getOverlappedCalendars(int roomId, String regYmd, String startTime, String endTime) {
 		return calendarRepository.getOverlappedCalendars(roomId, regYmd, startTime, endTime);
 	}
+	
+	@Override
+	public 	List<CalendarDto> getAllOverlappedCalendars() {
+		return calendarRepository.getAllOverlappedCalendars();
+	}
 
+	@Override
+	public List<Calendar> getCalendars(int calId) {
+		return calendarRepository.findByCalId(calId);
+	}
 }

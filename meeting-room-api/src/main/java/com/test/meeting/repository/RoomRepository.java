@@ -1,6 +1,5 @@
 package com.test.meeting.repository;
 
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -7,11 +7,15 @@ import com.test.meeting.domain.CalendarDto;
 import com.test.meeting.domain.Room;
 
 public interface ICalendarService {
-	String addCalendar(CalendarDto calendarDto);
+	Calendar addCalendar(CalendarDto calendarDto);
 
 	List<Calendar> getCalendars(String regYmd);
+	
+	List<Calendar> getCalendars(int calId);
 
 	List<Room> getRooms();
 	
-	List<Calendar> getOverlappedCalendars(int roomId, String regYmd, String startTime, String endTime);
+	List<CalendarDto> getOverlappedCalendars(int roomId, String regYmd, String startTime, String endTime);
+	
+	List<CalendarDto> getAllOverlappedCalendars();
 }

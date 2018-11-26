@@ -6,17 +6,13 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.domain.Room;
@@ -24,38 +20,65 @@ import com.test.meeting.service.IMeetingRoomApi;
 
 import feign.FeignException;
 
-@EnableEurekaClient
-@EnableFeignClients(basePackages = { "com.test.meeting.service" })
 @Controller
 public class MeetingRoomWebController {
-	@Autowired
 	IMeetingRoomApi iMeetingRoomApi;
 
-	@RequestMapping(value = "/calendar/add", method = RequestMethod.GET)
+	@Autowired
+	public MeetingRoomWebController(IMeetingRoomApi iMeetingRoomApi) {
+		this.iMeetingRoomApi = iMeetingRoomApi;
+	}
+
+	@GetMapping("/calendar/add")
 	public String addCalendarForm(String regYmd, Model model) {
 		model.addAttribute("regYmd", regYmd);
 		return "addCalendar";
 	}
 
-	@RequestMapping(value = "/calendar/add/submit", method = RequestMethod.POST)
-	public String addCalendar(Calendar calendar, RedirectAttributes redirectAttributes) {
+	/**
+	 * Submit new calendar
+	 * 1. Check new calendar overlap exist calendars
+	 * 2. Add new calendar
+	 * 3. Sleep 2 seconds
+	 * 4. Check new calendar is exists or not
+	 * 		4.1 every second scheduled job check overlapping calendars and remove rest calendars except first one.
+	 * 
+	 * @param calendar
+	 * @param redirectAttributes
+	 * @return
+	 * @throws InterruptedException
+	 */
+	@PostMapping("/calendar/add/submit")
+	public String addCalendar(Calendar calendar, RedirectAttributes redirectAttributes) throws InterruptedException {
 		try {
 			if (iMeetingRoomApi.isCalendarExists(calendar.getRoomId(), calendar.getRegYmd(), calendar.getStartTime(),
 					calendar.getEndTime()).getStatusCode() == HttpStatus.OK) {
-				if (iMeetingRoomApi.addCalendars(calendar).getStatusCode() != HttpStatus.CREATED) {
-					redirectAttributes.addFlashAttribute("result", "Fail");
+				
+				ResponseEntity<Calendar> resultCalendar = iMeetingRoomApi.addCalendars(calendar);
+				if (resultCalendar.getStatusCode() == HttpStatus.CREATED) {
+					Thread.sleep(2000L); // wait for 2 seconds
+					if (iMeetingRoomApi.getByCalId(resultCalendar.getBody().getCalId()).getStatusCode() == HttpStatus.OK) {
+						redirectAttributes.addFlashAttribute("result", "Calendar was successfully registered");
+					}
+				} else {
+					redirectAttributes.addFlashAttribute("result", "Failed to create calendar");
 				}
+				
 			}
 		} catch (FeignException fe) {
 			if (fe.status() == HttpStatus.CONFLICT.value()) {
-				redirectAttributes.addFlashAttribute("result", "Already Exists");
+				redirectAttributes.addFlashAttribute("result", "Calendar overlap exists items");
+			}
+			
+			if (fe.status() == HttpStatus.NOT_FOUND.value()) {
+				redirectAttributes.addFlashAttribute("result", "Calendar was canceled by overlapping");
 			}
 		}
 
 		return "redirect:/calendar?regYmd=" + calendar.getRegYmd();
 	}
 
-	@RequestMapping(value = { "/calendar" }, method = RequestMethod.GET)
+	@GetMapping("/calendar")
 	public String main(String regYmd, Model model) {
 		if (StringUtils.isEmpty(regYmd)) {
 			regYmd = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

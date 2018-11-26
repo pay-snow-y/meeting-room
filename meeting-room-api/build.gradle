@@ -33,6 +33,7 @@ ext {
 
 dependencies {
 	compile('org.modelmapper:modelmapper:2.3.0');
+	compile('com.jayway.jsonpath:json-path');
 	compile('org.springframework.cloud:spring-cloud-starter-eureka:1.4.5.RELEASE')
 	compile('org.springframework.boot:spring-boot-devtools')
 	implementation('com.fasterxml.jackson.core:jackson-databind')

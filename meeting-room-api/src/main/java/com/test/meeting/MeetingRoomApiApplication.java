@@ -53,9 +53,9 @@ public class MeetingRoomApiApplication {
 	@Bean
 	InitializingBean initDataRoom(RoomRepository roomRepository) {
 		return () -> {
-			roomRepository.save(new Room("ȸ�ǽ� A(ID:1)"));
-			roomRepository.save(new Room("ȸ�ǽ� B(ID:2)"));
-			roomRepository.save(new Room("ȸ�ǽ� C(ID:3)"));
+			roomRepository.save(new Room("회의실A(ID:1)"));
+			roomRepository.save(new Room("회의실B(ID:2)"));
+			roomRepository.save(new Room("회의실C(ID:3)"));
 		};
 	}
 	

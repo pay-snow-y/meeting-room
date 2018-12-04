@@ -18,45 +18,92 @@ import org.springframework.web.bind.annotation.RestController;
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.domain.CalendarDto;
 import com.test.meeting.domain.Room;
+import com.test.meeting.exception.DuplicatedRegisterException;
 import com.test.meeting.repository.CalendarRepository;
 import com.test.meeting.service.ICalendarService;
 
+/**
+ * @author seyol
+ * 
+ *         Calendar CRUD Rest API controller
+ *
+ */
 @RestController
 public class CalendarApiController {
+	private static final String SEARCHING_CALENDAR_DOES_NOT_EXISTS = "Searching calendar does not exists.";
+
 	CalendarRepository calendarRepository;
 	ICalendarService calendarService;
-	
+
+	/**
+	 * @param calendarRepository
+	 * @param calendarService
+	 * 
+	 *     Autowired constructor
+	 */
 	@Autowired
 	public CalendarApiController(CalendarRepository calendarRepository, ICalendarService calendarService) {
 		this.calendarRepository = calendarRepository;
 		this.calendarService = calendarService;
 	}
+	
+	@GetMapping("/ex1")  
+    public String ex1(){  
+        // will be catched by global exception handler method handleBaseException  
+		throw new DuplicatedRegisterException();
+    }
+	
+	@GetMapping("/ex2")  
+    public String ex2() throws Exception{  
+        // will be catched by global exception handler method handleBaseException  
+        throw new Exception("Base Exception");
+    }  
 
+	/**
+	 * @param roomId
+	 * @param regYmd
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 * 
+	 * 		Search overlapped calendar by roomId, regYmd, startTime, endTime
+	 */
 	@GetMapping("/rooms/{roomId}/regYmd/{regYmd}/startTime/{startTime}/endtime/{endTime}")
-	public ResponseEntity<String> isCalendarExists(@PathVariable("roomId") int roomId,
+	public ResponseEntity<String> isOverlappedCalendarExists(@PathVariable("roomId") int roomId,
 			@PathVariable("regYmd") String regYmd, @PathVariable("startTime") String startTime,
 			@PathVariable("endTime") String endTime) {
 		List<CalendarDto> overlappedCalendarList = calendarService.getOverlappedCalendars(roomId, regYmd, startTime,
 				endTime);
 
-		if (CollectionUtils.isEmpty(overlappedCalendarList)) {
-			return new ResponseEntity<String>("Searching calendar does not exists.", HttpStatus.OK);
+		if (CollectionUtils.isNotEmpty(overlappedCalendarList)) {
+			throw new DuplicatedRegisterException();
 		}
 
-		return new ResponseEntity<String>("Searching calendar already exists.", HttpStatus.CONFLICT);
+		return new ResponseEntity<String>(SEARCHING_CALENDAR_DOES_NOT_EXISTS, HttpStatus.OK);
 	}
-	
+
+	/**
+	 * @param calId
+	 * @return
+	 * 
+	 * 		Search calendar by calId
+	 */
 	@GetMapping("/calId/{calId}")
 	public ResponseEntity<String> getByCalId(@PathVariable("calId") int calId) {
 		List<Calendar> overlappedCalendarList = calendarService.getCalendars(calId);
 
 		if (CollectionUtils.isEmpty(overlappedCalendarList)) {
-			return new ResponseEntity<String>("Searching calendar does not exists.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>(SEARCHING_CALENDAR_DOES_NOT_EXISTS, HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<String>("Searching calendar exists.", HttpStatus.OK);
 	}
-	
+
+	/**
+	 * @return
+	 * 
+	 * Search every overlapped calendars.
+	 */
 	@GetMapping("/findAllOverlapCalendars")
 	public ResponseEntity<List<CalendarDto>> findAllOverlapCalendars() {
 		List<CalendarDto> overlappedCalendarList = calendarService.getAllOverlappedCalendars();
@@ -68,17 +115,27 @@ public class CalendarApiController {
 		return new ResponseEntity<List<CalendarDto>>(overlappedCalendarList, HttpStatus.CONFLICT);
 	}
 
-	@PostMapping("/calendars")
+	/**
+	 * @param calendarDto
+	 * @return
+	 * 
+	 * 		Add new calendar
+	 */
+	@PostMapping("/calendar")
 	public ResponseEntity<Calendar> addCalendars(@RequestBody CalendarDto calendarDto) {
 		try {
 			Calendar resultCalendar = calendarService.addCalendar(calendarDto);
-	
+
 			return new ResponseEntity<Calendar>(resultCalendar, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<Calendar>(new Calendar(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	/**
+	 * @param regYmd
+	 * @return
+	 */
 	@GetMapping({ "/calendars/{regYmd}", "/calendars" })
 	public List<Calendar> getCalendars(@PathVariable(name = "regYmd", required = false) String regYmd) {
 		if (StringUtils.isEmpty(regYmd)) {
@@ -88,6 +145,9 @@ public class CalendarApiController {
 		return calendarService.getCalendars(regYmd);
 	}
 
+	/**
+	 * @return
+	 */
 	@GetMapping("/rooms")
 	public List<Room> getRooms() {
 		return calendarService.getRooms();

@@ -54,7 +54,7 @@ public class MeetingRoomWebController {
 			if (iMeetingRoomApi.isCalendarExists(calendar.getRoomId(), calendar.getRegYmd(), calendar.getStartTime(),
 					calendar.getEndTime()).getStatusCode() == HttpStatus.OK) {
 				
-				ResponseEntity<Calendar> resultCalendar = iMeetingRoomApi.addCalendars(calendar);
+				ResponseEntity<Calendar> resultCalendar = iMeetingRoomApi.addCalendar(calendar);
 				if (resultCalendar.getStatusCode() == HttpStatus.CREATED) {
 					Thread.sleep(2000L); // wait for 2 seconds
 					if (iMeetingRoomApi.getByCalId(resultCalendar.getBody().getCalId()).getStatusCode() == HttpStatus.OK) {

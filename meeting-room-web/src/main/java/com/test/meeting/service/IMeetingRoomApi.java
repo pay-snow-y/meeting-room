@@ -20,8 +20,8 @@ public interface IMeetingRoomApi {
 	@GetMapping("/rooms")
 	List<Room> getRooms();
 	
-	@PostMapping("/calendars")
-	ResponseEntity<Calendar> addCalendars(Calendar calendars);
+	@PostMapping("/calendar")
+	ResponseEntity<Calendar> addCalendar(Calendar calendars);
 	
 	@GetMapping("/rooms/{roomId}/regYmd/{regYmd}/startTime/{startTime}/endtime/{endTime}")
 	public @ResponseBody ResponseEntity<String> isCalendarExists(@PathVariable("roomId") int roomId,

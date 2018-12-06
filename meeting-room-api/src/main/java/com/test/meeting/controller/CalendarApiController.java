@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.domain.CalendarDto;
 import com.test.meeting.domain.Room;
+import com.test.meeting.exception.CalendarNotFoundException;
 import com.test.meeting.exception.DuplicatedRegisterException;
+import com.test.meeting.exception.MeetingRoomNotFoundException;
 import com.test.meeting.repository.CalendarRepository;
 import com.test.meeting.service.ICalendarService;
 
@@ -46,18 +48,6 @@ public class CalendarApiController {
 		this.calendarRepository = calendarRepository;
 		this.calendarService = calendarService;
 	}
-	
-	@GetMapping("/ex1")  
-    public String ex1(){  
-        // will be catched by global exception handler method handleBaseException  
-		throw new DuplicatedRegisterException();
-    }
-	
-	@GetMapping("/ex2")  
-    public String ex2() throws Exception{  
-        // will be catched by global exception handler method handleBaseException  
-        throw new Exception("Base Exception");
-    }  
 
 	/**
 	 * @param roomId
@@ -93,7 +83,7 @@ public class CalendarApiController {
 		List<Calendar> overlappedCalendarList = calendarService.getCalendars(calId);
 
 		if (CollectionUtils.isEmpty(overlappedCalendarList)) {
-			return new ResponseEntity<String>(SEARCHING_CALENDAR_DOES_NOT_EXISTS, HttpStatus.NOT_FOUND);
+			throw new CalendarNotFoundException();
 		}
 
 		return new ResponseEntity<String>("Searching calendar exists.", HttpStatus.OK);

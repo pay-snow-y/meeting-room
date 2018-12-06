@@ -56,6 +56,7 @@ public class MeetingRoomWebApplicationTests {
 				.param("regYmd", "2018-11-27").param("startTime", "10:30").param("endTime", "11:00"))
 				.andExpect(status().isFound());
 	}
+	
 
 	@Test
 	public void getAddCalendarPage() throws Exception {
@@ -69,6 +70,11 @@ public class MeetingRoomWebApplicationTests {
 
 	@Test
 	public void contextLoads() {
+	}
+	
+	@Test
+	public void duplicatedRegisterException_test() {
+		
 	}
 
 }

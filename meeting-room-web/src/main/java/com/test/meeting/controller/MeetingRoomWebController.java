@@ -16,6 +16,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.test.meeting.domain.Calendar;
 import com.test.meeting.domain.Room;
+import com.test.meeting.exception.CalendarNotFoundException;
+import com.test.meeting.exception.DuplicatedRegisterException;
+import com.test.meeting.exception.MeetingRoomNotFoundException;
 import com.test.meeting.service.IMeetingRoomApi;
 
 import feign.FeignException;

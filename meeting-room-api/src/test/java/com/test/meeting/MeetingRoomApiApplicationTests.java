@@ -53,7 +53,7 @@ public class MeetingRoomApiApplicationTests {
 	public void addCalendars() throws Exception {
 		Gson gson = new Gson();
 	    String json = gson.toJson(new Calendar(1, "Seyol", "2018-11-27", "10:30", "11:00", "N", 0));
-		mockMvc.perform(post("/calendars").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
+		mockMvc.perform(post("/calendar").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isCreated());
 	}
 	
 	@Test
